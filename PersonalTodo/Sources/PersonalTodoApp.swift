@@ -4,8 +4,10 @@ import SwiftData
 @main
 struct PersonalTodoApp: App {
     var body: some Scene {
-        MenuBarExtra("Personal Todo", systemImage: "checklist") {
+        MenuBarExtra {
             ContentView()
+        } label: {
+            MenuBarLabel()
         }
         .menuBarExtraStyle(.window)
         .modelContainer(for: TodoTask.self)
