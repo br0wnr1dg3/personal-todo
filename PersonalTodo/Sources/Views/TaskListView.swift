@@ -2,7 +2,6 @@ import SwiftUI
 
 struct TaskListView: View {
     let store: TaskStore
-    @State private var draggingTask: TodoTask?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -27,23 +26,16 @@ struct TaskListView: View {
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        ForEach(store.incompleteTasks) { task in
-                            TaskRow(task: task) {
-                                store.completeTask(task)
+                        ForEach(Array(store.incompleteTasks.enumerated()), id: \.element.id) { index, task in
+                            TaskRow(
+                                task: task,
+                                onToggle: { store.completeTask(task) },
+                                onMoveUp: index > 0 ? { store.swapTasks(index, index - 1) } : nil,
+                                onMoveDown: index < store.incompleteTasks.count - 1 ? { store.swapTasks(index, index + 1) } : nil
+                            )
+                            if index < store.incompleteTasks.count - 1 {
+                                Divider().padding(.leading, 40)
                             }
-                            .draggable(task.id.uuidString) {
-                                TaskRow(task: task) {}
-                                    .frame(width: 300)
-                                    .opacity(0.8)
-                            }
-                            .dropDestination(for: String.self) { items, _ in
-                                guard let draggedIdString = items.first,
-                                      let draggedId = UUID(uuidString: draggedIdString),
-                                      draggedId != task.id else { return false }
-                                store.moveTask(id: draggedId, before: task)
-                                return true
-                            }
-                            Divider().padding(.leading, 40)
                         }
                     }
                 }

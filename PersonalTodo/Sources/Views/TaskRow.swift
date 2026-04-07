@@ -3,6 +3,8 @@ import SwiftUI
 struct TaskRow: View {
     let task: TodoTask
     let onToggle: () -> Void
+    var onMoveUp: (() -> Void)?
+    var onMoveDown: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 10) {
@@ -29,6 +31,26 @@ struct TaskRow: View {
             }
 
             Spacer()
+
+            if onMoveUp != nil || onMoveDown != nil {
+                VStack(spacing: 0) {
+                    Button { onMoveUp?() } label: {
+                        Image(systemName: "chevron.up")
+                            .font(.caption2)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(onMoveUp != nil ? .secondary : .quaternary)
+                    .disabled(onMoveUp == nil)
+
+                    Button { onMoveDown?() } label: {
+                        Image(systemName: "chevron.down")
+                            .font(.caption2)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(onMoveDown != nil ? .secondary : .quaternary)
+                    .disabled(onMoveDown == nil)
+                }
+            }
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 8)

@@ -53,12 +53,10 @@ final class TaskStore {
         refresh()
     }
 
-    func moveTask(id draggedId: UUID, before targetTask: TodoTask) {
+    func swapTasks(_ indexA: Int, _ indexB: Int) {
         var mutable = incompleteTasks
-        guard let fromIndex = mutable.firstIndex(where: { $0.id == draggedId }),
-              let toIndex = mutable.firstIndex(where: { $0.id == targetTask.id }) else { return }
-        let task = mutable.remove(at: fromIndex)
-        mutable.insert(task, at: toIndex)
+        guard indexA >= 0, indexB >= 0, indexA < mutable.count, indexB < mutable.count else { return }
+        mutable.swapAt(indexA, indexB)
         for (index, t) in mutable.enumerated() {
             t.sortOrder = index
         }
