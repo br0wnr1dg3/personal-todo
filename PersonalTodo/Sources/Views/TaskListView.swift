@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TaskListView: View {
     let store: TaskStore
+    @State private var draggingTask: TodoTask?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -24,17 +25,28 @@ struct TaskListView: View {
                     .foregroundStyle(.secondary)
                 Spacer()
             } else {
-                List {
-                    ForEach(store.incompleteTasks) { task in
-                        TaskRow(task: task) {
-                            store.completeTask(task)
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(store.incompleteTasks) { task in
+                            TaskRow(task: task) {
+                                store.completeTask(task)
+                            }
+                            .draggable(task.id.uuidString) {
+                                TaskRow(task: task) {}
+                                    .frame(width: 300)
+                                    .opacity(0.8)
+                            }
+                            .dropDestination(for: String.self) { items, _ in
+                                guard let draggedIdString = items.first,
+                                      let draggedId = UUID(uuidString: draggedIdString),
+                                      draggedId != task.id else { return false }
+                                store.moveTask(id: draggedId, before: task)
+                                return true
+                            }
+                            Divider().padding(.leading, 40)
                         }
                     }
-                    .onMove { source, destination in
-                        store.moveTasks(from: source, to: destination)
-                    }
                 }
-                .listStyle(.plain)
             }
         }
     }

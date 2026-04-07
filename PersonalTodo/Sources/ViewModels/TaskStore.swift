@@ -53,11 +53,14 @@ final class TaskStore {
         refresh()
     }
 
-    func moveTasks(from source: IndexSet, to destination: Int) {
+    func moveTask(id draggedId: UUID, before targetTask: TodoTask) {
         var mutable = incompleteTasks
-        mutable.move(fromOffsets: source, toOffset: destination)
-        for (index, task) in mutable.enumerated() {
-            task.sortOrder = index
+        guard let fromIndex = mutable.firstIndex(where: { $0.id == draggedId }),
+              let toIndex = mutable.firstIndex(where: { $0.id == targetTask.id }) else { return }
+        let task = mutable.remove(at: fromIndex)
+        mutable.insert(task, at: toIndex)
+        for (index, t) in mutable.enumerated() {
+            t.sortOrder = index
         }
         try? modelContext.save()
         refresh()
