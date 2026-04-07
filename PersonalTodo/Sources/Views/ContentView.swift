@@ -2,16 +2,10 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Query(filter: #Predicate<TodoTask> { !$0.completed },
-           sort: \TodoTask.sortOrder)
-    private var tasks: [TodoTask]
-
-    init() {}
-
     var body: some View {
-        VStack {
-            Text("Tasks: \(tasks.count)")
+        VStack(spacing: 0) {
+            TaskListView()
         }
-        .frame(width: 320, height: 400)
+        .frame(width: 340, height: 450)
     }
 }
