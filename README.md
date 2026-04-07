@@ -82,7 +82,15 @@ The `/review-day` command works with MCP integrations connected through your Cla
 - **[Gmail](https://mail.google.com)** — email action items and follow-ups
 - **[Slack](https://slack.com)** — messages needing follow-up
 
-These are configured in your Claude settings, not in this app.
+These are just examples — you can connect any MCP-compatible data source and the `/review-day` command will pull action items from it. Other popular options include:
+
+- **[Fireflies](https://fireflies.ai)** — meeting transcripts
+- **[Linear](https://linear.app)** — assigned issues and project tasks
+- **[Google Calendar](https://calendar.google.com)** — upcoming meetings and deadlines
+- **[HubSpot](https://hubspot.com)** — CRM tasks and follow-ups
+- **[Notion](https://notion.so)** — notes and project tracking
+
+All MCP integrations are configured in your Claude settings, not in this app. The more sources you connect, the more comprehensive your daily review becomes.
 
 ## URL Scheme
 
