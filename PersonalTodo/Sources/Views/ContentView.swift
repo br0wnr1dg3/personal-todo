@@ -24,6 +24,8 @@ struct ContentView: View {
                     TaskListView()
                     Divider()
                     AddTaskView()
+                    Divider()
+                    AppFooter()
                 }
             }
         }
