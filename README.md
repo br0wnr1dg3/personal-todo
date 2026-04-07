@@ -17,7 +17,7 @@ A simple macOS menubar app for managing daily tasks across multiple clients and 
 ## Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/personal-todo.git
+git clone https://github.com/br0wnr1dg3/personal-todo.git
 cd personal-todo/PersonalTodo
 bash bundle.sh
 cp -r build/PersonalTodo.app /Applications/
