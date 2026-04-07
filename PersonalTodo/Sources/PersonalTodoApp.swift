@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct PersonalTodoApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     let container: ModelContainer
     @State private var store: TaskStore
 
@@ -20,15 +22,10 @@ struct PersonalTodoApp: App {
         self.container = container
         let store = TaskStore(modelContext: container.mainContext)
         self._store = State(initialValue: store)
-        NotificationService.requestPermission()
 
-        // Register URL scheme handler
-        NSAppleEventManager.shared().setEventHandler(
-            URLHandler.shared,
-            andSelector: #selector(URLHandler.handleURL(_:withReply:)),
-            forEventClass: AEEventClass(kInternetEventClass),
-            andEventID: AEEventID(kAEGetURL)
-        )
-        URLHandler.shared.store = store
+        // Share store globally so AppDelegate can use it for URL handling
+        TaskStore.shared = store
+
+        NotificationService.requestPermission()
     }
 }

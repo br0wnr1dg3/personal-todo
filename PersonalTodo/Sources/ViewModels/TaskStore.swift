@@ -4,6 +4,8 @@ import Observation
 
 @Observable
 final class TaskStore {
+    static var shared: TaskStore?
+
     var tasks: [TodoTask] = []
     private let modelContext: ModelContext
 
