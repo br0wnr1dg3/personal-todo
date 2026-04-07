@@ -1,20 +1,15 @@
 import SwiftUI
-import SwiftData
 
 struct TaskListView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(filter: #Predicate<TodoTask> { !$0.completed },
-           sort: \TodoTask.sortOrder)
-    private var tasks: [TodoTask]
+    let store: TaskStore
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
             HStack {
                 Text("Today")
                     .font(.headline)
                 Spacer()
-                Text("\(tasks.count) tasks")
+                Text("\(store.incompleteTasks.count) tasks")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -23,25 +18,20 @@ struct TaskListView: View {
 
             Divider()
 
-            // Task list
-            if tasks.isEmpty {
+            if store.incompleteTasks.isEmpty {
                 Spacer()
                 Text("No tasks for today")
                     .foregroundStyle(.secondary)
                 Spacer()
             } else {
                 List {
-                    ForEach(tasks) { task in
+                    ForEach(store.incompleteTasks) { task in
                         TaskRow(task: task) {
-                            task.completed = true
+                            store.completeTask(task)
                         }
                     }
                     .onMove { source, destination in
-                        var mutableTasks = tasks
-                        mutableTasks.move(fromOffsets: source, toOffset: destination)
-                        for (index, task) in mutableTasks.enumerated() {
-                            task.sortOrder = index
-                        }
+                        store.moveTasks(from: source, to: destination)
                     }
                 }
                 .listStyle(.plain)

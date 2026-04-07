@@ -1,21 +1,18 @@
 import SwiftUI
-import SwiftData
 
 struct MorningReviewView: View {
-    @Environment(\.modelContext) private var modelContext
-    let overdueTasks: [TodoTask]
+    let store: TaskStore
     let onComplete: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
             VStack(spacing: 4) {
                 Image(systemName: "sunrise.fill")
                     .font(.largeTitle)
                     .foregroundStyle(.orange)
                 Text("Morning Review")
                     .font(.headline)
-                Text("\(overdueTasks.count) tasks from previous days")
+                Text("\(store.overdueTasks.count) tasks from previous days")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -23,9 +20,8 @@ struct MorningReviewView: View {
 
             Divider()
 
-            // Task list
             List {
-                ForEach(overdueTasks) { task in
+                ForEach(store.overdueTasks) { task in
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(task.title)
@@ -39,16 +35,20 @@ struct MorningReviewView: View {
                         Spacer()
 
                         Button("Done") {
-                            task.completed = true
-                            checkIfComplete()
+                            store.completeTask(task)
+                            if store.overdueTasks.isEmpty {
+                                onComplete()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.green)
                         .controlSize(.small)
 
                         Button("Today") {
-                            task.createdDate = Date()
-                            checkIfComplete()
+                            store.moveTaskToToday(task)
+                            if store.overdueTasks.isEmpty {
+                                onComplete()
+                            }
                         }
                         .buttonStyle(.bordered)
                         .controlSize(.small)
@@ -57,13 +57,6 @@ struct MorningReviewView: View {
                 }
             }
             .listStyle(.plain)
-        }
-    }
-
-    private func checkIfComplete() {
-        let remaining = overdueTasks.filter { !$0.completed && !Calendar.current.isDateInToday($0.createdDate) }
-        if remaining.isEmpty {
-            onComplete()
         }
     }
 }

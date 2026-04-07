@@ -1,29 +1,21 @@
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(filter: #Predicate<TodoTask> { !$0.completed },
-           sort: \TodoTask.sortOrder)
-    private var incompleteTasks: [TodoTask]
-
+    let store: TaskStore
     @State private var appState = AppState()
-
-    private var overdueTasks: [TodoTask] {
-        incompleteTasks.filter { !Calendar.current.isDateInToday($0.createdDate) }
-    }
 
     var body: some View {
         Group {
-            if appState.needsMorningReview(overdueCount: overdueTasks.count) {
-                MorningReviewView(overdueTasks: overdueTasks) {
+            if appState.needsMorningReview(overdueCount: store.overdueTasks.count) {
+                MorningReviewView(store: store) {
                     appState.completeMorningReview()
+                    store.refresh()
                 }
             } else {
                 VStack(spacing: 0) {
-                    TaskListView()
+                    TaskListView(store: store)
                     Divider()
-                    AddTaskView()
+                    AddTaskView(store: store)
                     Divider()
                     AppFooter()
                 }
@@ -31,8 +23,9 @@ struct ContentView: View {
         }
         .frame(width: 340, height: 450)
         .onAppear {
-            if appState.isNewDay && !overdueTasks.isEmpty {
-                NotificationService.sendMorningReminder(taskCount: overdueTasks.count)
+            store.refresh()
+            if appState.isNewDay && !store.overdueTasks.isEmpty {
+                NotificationService.sendMorningReminder(taskCount: store.overdueTasks.count)
             }
         }
     }

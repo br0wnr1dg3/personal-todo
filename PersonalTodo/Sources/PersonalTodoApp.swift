@@ -3,20 +3,23 @@ import SwiftData
 
 @main
 struct PersonalTodoApp: App {
+    let container: ModelContainer
+    @State private var store: TaskStore
+
     var body: some Scene {
         MenuBarExtra {
-            ContentView()
+            ContentView(store: store)
         } label: {
-            MenuBarLabel()
+            MenuBarLabel(store: store)
         }
         .menuBarExtraStyle(.window)
-        .modelContainer(for: TodoTask.self)
     }
 
     init() {
-        // Hide dock icon — LSUIElement in Info.plist doesn't apply to SPM executables,
-        // so we set it programmatically.
-        NSApplication.shared.setActivationPolicy(.accessory)
+        let container = try! ModelContainer(for: TodoTask.self)
+        self.container = container
+        let store = TaskStore(modelContext: container.mainContext)
+        self._store = State(initialValue: store)
         NotificationService.requestPermission()
     }
 }

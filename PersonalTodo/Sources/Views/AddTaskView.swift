@@ -1,27 +1,19 @@
 import SwiftUI
-import SwiftData
 
 struct AddTaskView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var allTasks: [TodoTask]
+    let store: TaskStore
 
     @State private var title = ""
     @State private var label = ""
     @State private var showLabelSuggestions = false
 
-    private var existingLabels: [String] {
-        let labels = Set(allTasks.map(\.label)).filter { !$0.isEmpty }
-        return labels.sorted()
-    }
-
     private var filteredLabels: [String] {
-        if label.isEmpty { return existingLabels }
-        return existingLabels.filter { $0.localizedCaseInsensitiveContains(label) }
+        if label.isEmpty { return store.existingLabels }
+        return store.existingLabels.filter { $0.localizedCaseInsensitiveContains(label) }
     }
 
     var body: some View {
         VStack(spacing: 8) {
-            // Label suggestions
             if showLabelSuggestions && !filteredLabels.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
@@ -73,9 +65,7 @@ struct AddTaskView: View {
 
     private func addTask() {
         guard !title.isEmpty else { return }
-        let maxOrder = allTasks.map(\.sortOrder).max() ?? -1
-        let task = TodoTask(title: title, label: label, sortOrder: maxOrder + 1)
-        modelContext.insert(task)
+        store.addTask(title: title, label: label)
         title = ""
         showLabelSuggestions = false
     }
