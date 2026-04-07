@@ -2,6 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.personal.todo</string>
+    <key>CFBundleName</key>
+    <string>PersonalTodo</string>
+    <key>CFBundleDisplayName</key>
+    <string>Personal Todo</string>
+    <key>CFBundleExecutable</key>
+    <string>PersonalTodo</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
     <key>LSUIElement</key>
     <true/>
 </dict>
