@@ -28,5 +28,10 @@ struct ContentView: View {
             }
         }
         .frame(width: 340, height: 450)
+        .onAppear {
+            if appState.isNewDay && !overdueTasks.isEmpty {
+                NotificationService.sendMorningReminder(taskCount: overdueTasks.count)
+            }
+        }
     }
 }

@@ -10,4 +10,8 @@ struct PersonalTodoApp: App {
         .menuBarExtraStyle(.window)
         .modelContainer(for: TodoTask.self)
     }
+
+    init() {
+        NotificationService.requestPermission()
+    }
 }
