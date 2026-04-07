@@ -18,5 +18,16 @@
     <string>1.0</string>
     <key>LSUIElement</key>
     <true/>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.personal.todo</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>personaltodo</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

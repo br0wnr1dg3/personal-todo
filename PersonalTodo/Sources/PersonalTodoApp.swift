@@ -21,5 +21,14 @@ struct PersonalTodoApp: App {
         let store = TaskStore(modelContext: container.mainContext)
         self._store = State(initialValue: store)
         NotificationService.requestPermission()
+
+        // Register URL scheme handler
+        NSAppleEventManager.shared().setEventHandler(
+            URLHandler.shared,
+            andSelector: #selector(URLHandler.handleURL(_:withReply:)),
+            forEventClass: AEEventClass(kInternetEventClass),
+            andEventID: AEEventID(kAEGetURL)
+        )
+        URLHandler.shared.store = store
     }
 }
