@@ -14,6 +14,9 @@ struct PersonalTodoApp: App {
     }
 
     init() {
+        // Hide dock icon — LSUIElement in Info.plist doesn't apply to SPM executables,
+        // so we set it programmatically.
+        NSApplication.shared.setActivationPolicy(.accessory)
         NotificationService.requestPermission()
     }
 }
